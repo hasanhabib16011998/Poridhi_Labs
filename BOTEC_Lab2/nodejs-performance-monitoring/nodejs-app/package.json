@@ -1,0 +1,32 @@
+{
+  "name": "monitoring-demo-api",
+  "version": "1.0.0",
+  "description": "Node.js API with PostgreSQL and Prometheus monitoring",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "postgresql",
+    "prometheus",
+    "monitoring"
+  ],
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.11.0",
+    "prom-client": "^15.1.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

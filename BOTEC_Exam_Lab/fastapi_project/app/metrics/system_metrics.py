@@ -12,7 +12,7 @@ from prometheus_client import (
     CONTENT_TYPE_LATEST,
 )
 
-# Create a custom registry (optional)
+# ✅ Custom registry
 registry = CollectorRegistry()
 
 # Process info
@@ -20,7 +20,7 @@ process = psutil.Process(os.getpid())
 
 # Metrics definitions
 process_cpu_seconds_total = Counter(
-    'process_cpu_seconds_total',
+    'process_cpu_seconds_sum',
     'Total user and system CPU time spent in seconds.',
     registry=registry,
 )

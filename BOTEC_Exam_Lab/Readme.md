@@ -107,8 +107,8 @@ project/
 1. **Clone the project**
 
    ```bash
-   git clone <your-repo-url>
-   cd project/
+   git clone https://github.com/hasanhabib16011998/Poridhi_Labs.git
+   cd Poridhi_Labs/BOTEC_Exam_Lab/
    ```
 
 2. **Build and run the services**
@@ -122,6 +122,12 @@ project/
    * FastAPI: [http://localhost:8000](http://localhost:8000)
    * Metrics endpoint: [http://localhost:8000/metrics](http://localhost:8000/metrics)
    * Prometheus UI: [http://localhost:9090](http://localhost:9090)
+
+4. **Load testing**
+
+   ```bash
+   python test_fastapi.py
+   ```
 
 ---
 
@@ -147,8 +153,8 @@ docker-compose down
 
 ## 📝 Notes
 
-* You are using a **custom Prometheus registry** instead of the global one.
+* We are using a **custom Prometheus registry** instead of the global one.
 * Metrics are collected **every 5 seconds** by default (`scrape_interval`).
-* You can extend the app with more business routes in the `routers/` directory.
+* We can extend the app with more business routes in the `routers/` directory.
 
 ---

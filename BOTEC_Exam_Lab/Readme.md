@@ -1,5 +1,3 @@
-Here’s a comprehensive **documentation** for your FastAPI + Prometheus monitoring setup, including **project overview**, **architecture**, **metrics**, and **step-by-step instructions to run** the application.
-
 ---
 
 # 📘 FastAPI Application with Prometheus Monitoring
@@ -154,5 +152,3 @@ docker-compose down
 * You can extend the app with more business routes in the `routers/` directory.
 
 ---
-
-Let me know if you'd like a Markdown version (`README.md`) or PDF export.

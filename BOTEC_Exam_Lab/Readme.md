@@ -75,22 +75,26 @@ This project is a containerized FastAPI application instrumented with **custom H
 
 ```
 project/
-│
 ├── docker-compose.yml
-├── fastapi_project/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── app/
-│       ├── main.py
-│       ├── routers/
-│       │   ├── api.py
-│       │   └── health.py
-│       └── metrics/
-│           ├── http_metrics.py
-│           ├── system_metrics.py
-│           └── metrics_middleware.py
-└── prometheus/
-    └── prometheus.yml
+├── fastapi_project
+│   ├── app
+│   │   ├── main.py
+│   │   ├── metrics
+│   │   │   ├── http_metrics.py
+│   │   │   └── system_metrics.py
+│   │   ├── middleware
+│   │   │   └── metrics_middleware.py
+│   │   └── routers
+│   │       ├── api.py
+│   │       ├── health.py
+│   │       └── __init__.py
+│   ├── Dockerfile
+│   └── requirements.txt
+├── prometheus
+│   └── prometheus.yml
+├── Readme.md
+└── test_fastapi.py
+
 ```
 
 ---

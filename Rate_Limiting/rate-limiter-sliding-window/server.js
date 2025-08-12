@@ -1,34 +1,38 @@
 const http = require('http');
 const rateLimitWindowMs = 60 * 1000; // 1 minute
 const maxRequestsPerWindow = 5;
-const ipRequests = {}; // { 'ip': { count: Number, startTime: Timestamp } }
+const ipRequests = {}; // { 'ip': [Timestamp, Timestamp, ...] }
 
 const rateLimitMiddleware = (req, res) => {
-  console.log(req.socket.remoteAddress);
   const ip = req.socket.remoteAddress;
   const currentTime = Date.now();
+
+  // Initialize if IP is new
   if (!ipRequests[ip]) {
-    ipRequests[ip] = { count: 1, startTime: currentTime };
-  } else {
-    const timePassed = currentTime - ipRequests[ip].startTime;
-    if (timePassed < rateLimitWindowMs) {
-      ipRequests[ip].count++;
-    } else {
-      // Window reset
-      ipRequests[ip].count = 1;
-      ipRequests[ip].startTime = currentTime;
-    }
+    ipRequests[ip] = [];
   }
-  if (ipRequests[ip].count > maxRequestsPerWindow) {
+
+  // Remove timestamps that are outside the current window
+  ipRequests[ip] = ipRequests[ip].filter(timestamp => {
+    return currentTime - timestamp < rateLimitWindowMs;
+  });
+
+  // Check if the request count exceeds the limit
+  if (ipRequests[ip].length >= maxRequestsPerWindow) {
     res.statusCode = 429;
     res.setHeader('Content-Type', 'text/plain');
     res.end('Too many requests. Try again later.');
-    return false; // Don't proceed to handler
+    return false; // Don't proceed
+  } else {
+    // Add the new request timestamp and allow the request
+    ipRequests[ip].push(currentTime);
+    return true; // Allow request
   }
-  return true; // Allow request
 };
+
 const server = http.createServer((req, res) => {
   if (!rateLimitMiddleware(req, res)) return;
+  
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
   res.end('Hello, world!');

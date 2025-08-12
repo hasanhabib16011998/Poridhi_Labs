@@ -1,6 +1,7 @@
 const express = require("express");
 
 const app = express();
+app.use(express.json());
 
 const port = 3001;
 
@@ -49,6 +50,13 @@ app.get("/employee/:id/:dept",(req,res)=>{
 
         })
     }
+});
+
+app.post("/signup",(req,res)=>{
+    const { name, age, location, pass } = req.body;
+    console.log(name,age,location,pass);
+    console.log(req.headers['token']);
+    res.send("Completed...");
 })
 
 

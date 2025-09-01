@@ -1,12 +1,17 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 const app = express();
 const SECRET = 'aerifaeirfbhik';
 app.use(cors());
 app.use(bodyParser.json());
+
+import { generateText } from 'ai';
+import { google } from '@ai-sdk/google';
+const model = google('gemini-2.0-flash');
 
 const rateLimitWindowMs = 60 * 1000; // 1 minute
 const userTiers = {
@@ -93,9 +98,18 @@ function rateLimitMiddleware(req, res, next) {
 }
 
 // --- CHAT ENDPOINT ---
-app.post('/api/chat', identifyUser, rateLimitMiddleware, (req, res) => {
-    console.log(req.body.prompt)
-    res.send('Here is your response!');
+app.post('/api/chat', identifyUser, rateLimitMiddleware, async (req, res) => {
+    try {
+        const { prompt } = req.body;
+        const { text } = await generateText({
+            model: model,
+            prompt: prompt,
+        });
+        res.json({ response: text });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'AI response error' });
+    }
 });
 
 // --- STATUS ENDPOINT ---

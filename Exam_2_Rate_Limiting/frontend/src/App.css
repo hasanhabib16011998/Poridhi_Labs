@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Optional: Custom scrollbars for dark mode */
+body {
+  @apply bg-gray-900 text-gray-100;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #1f2937;
+}
+::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 8px;
+}

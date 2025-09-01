@@ -5,20 +5,20 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const token = localStorage.getItem('token');
-    const userType = localStorage.getItem('userType');
+    const userTier = localStorage.getItem('userTier');
     const email = localStorage.getItem('email');
-    if (token && userType && email) {
-      return { token, userType, email };
+    if (token && userTier && email) {
+      return { token, userTier, email };
     }
-    if (userType === 'guest') {
-      return { userType: 'guest' };
+    if (userTier === 'guest') {
+      return { userTier: 'guest' };
     }
     return null;
   });
 
   const login = (data) => {
     localStorage.setItem('token', data.token);
-    localStorage.setItem('userType', data.userType);
+    localStorage.setItem('userType', data.userTier);
     localStorage.setItem('email', data.email);
     setUser(data);
   };
@@ -29,8 +29,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const guestLogin = () => {
-    localStorage.setItem('userType', 'guest');
-    setUser({ userType: 'guest' });
+    localStorage.setItem('userTier', 'guest');
+    setUser({ userTier: 'guest' });
   };
 
   return (

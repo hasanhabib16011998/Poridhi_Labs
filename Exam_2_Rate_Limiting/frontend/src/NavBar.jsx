@@ -6,9 +6,9 @@ function NavBar() {
 
   let status = 'Not logged in';
   if (user) {
-    if (user.userType === 'premium') status = 'Premium User';
-    else if (user.userType === 'free_user') status = 'Free User';
-    else if (user.userType === 'guest') status = 'Guest';
+    if (user.userTier === 'premium') status = 'Premium User';
+    else if (user.userTier === 'free') status = 'Free User';
+    else if (user.userTier === 'guest') status = 'Guest';
   }
 
   return (

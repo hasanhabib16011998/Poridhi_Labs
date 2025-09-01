@@ -13,7 +13,7 @@ import { generateText } from 'ai';
 import { google } from '@ai-sdk/google';
 const model = google('gemini-2.0-flash');
 
-const rateLimitWindowMs = 60 * 1000; // 1 minute
+const rateLimitWindowMs = 60* 60 * 1000; // 1 hour
 const userTiers = {
     guest: { limit: 3 },
     free: { limit: 10 },
@@ -92,7 +92,7 @@ function rateLimitMiddleware(req, res, next) {
     }
 
     if (requestTracker[userId].count > tier.limit) {
-        return res.status(429).send(`Too many requests. Limit is ${tier.limit} per minute.`);
+        return res.status(429).send(`Too many requests. Limit is ${tier.limit} per hour. To use more, upgrade to Premium.`);
     }
     next();
 }

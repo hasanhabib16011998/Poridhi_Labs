@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { AuthContext } from "./AuthContext";
 import { FaUser, FaRobot } from "react-icons/fa";
+import axios from "axios";
+import ReactMarkdown from 'react-markdown';
+
 
 function MessageBubble({ isUser, isGuest, message }) {
   return (
@@ -17,24 +20,14 @@ function MessageBubble({ isUser, isGuest, message }) {
           {isGuest && (
             <span className="text-gray-400"><FaUser size={16} /></span>
           )}
-          <span>{message}</span>
+          <span className="prose prose-invert max-w-full">
+            <ReactMarkdown>{message}</ReactMarkdown>
+          </span>
         </div>
       </div>
     </div>
   );
 }
-
-const mockAIReply = async (input, mode) => {
-  // Simulate an API call to AI
-  await new Promise((r) => setTimeout(r, 900));
-  if (mode === "guest") {
-    return "You are chatting as a guest. AI responses may be limited.";
-  }
-  if (/hello|hi/i.test(input)) return "Hello! How can I help you today?";
-  if (/premium/i.test(input)) return "Premium users get priority support and more features!";
-  if (/free/i.test(input)) return "Free users have access to standard chat features.";
-  return "This is an AI response. Feel free to ask anything!";
-};
 
 function ChatPage() {
   const { user } = useContext(AuthContext);
@@ -45,6 +38,8 @@ function ChatPage() {
     },
   ]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const chatEndRef = useRef(null);
 
   // Scroll to bottom when new message appears
@@ -54,22 +49,55 @@ function ChatPage() {
 
   const handleSend = async (e) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    setError("");
+    if (!input.trim() || loading) return;
+
+    const senderType =
+      user?.userTier === "guest" || user?.userType === "guest"
+        ? "guest"
+        : "user";
 
     const myMsg = {
-      sender: user?.userType === "guest" ? "guest" : "user",
+      sender: senderType,
       text: input,
     };
     setMessages((msgs) => [...msgs, myMsg]);
     setInput("");
+    setLoading(true);
 
-    // Simulate AI reply
-    const reply = await mockAIReply(input, user?.userType);
-    setMessages((msgs) => [
-      ...msgs,
-      myMsg,
-      { sender: "ai", text: reply },
-    ]);
+    try {
+      // For guests, do not send token
+      const headers = {};
+      if (user?.token) {
+        headers["Authorization"] = `Bearer ${user.token}`;
+      }
+
+      const res = await axios.post(
+        "http://localhost:5000/api/chat",
+        { prompt: input },
+        { headers }
+      );
+      setMessages((msgs) => [
+        ...msgs,
+        { sender: "ai", text: res.data.response },
+      ]);
+    } catch (err) {
+      let msg = "AI response error.";
+      if (
+        err.response &&
+        err.response.status === 429 &&
+        typeof err.response.data === "string"
+      ) {
+        msg = err.response.data;
+      }
+      setMessages((msgs) => [
+        ...msgs,
+        { sender: "ai", text: msg },
+      ]);
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -85,6 +113,9 @@ function ChatPage() {
           />
         ))}
         <div ref={chatEndRef} />
+        {error && (
+          <div className="text-red-400 text-center mt-2">{error}</div>
+        )}
       </div>
       {/* Input Area */}
       <form
@@ -98,12 +129,15 @@ function ChatPage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           autoFocus
+          disabled={loading}
         />
         <button
-          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl font-semibold transition"
+          className={`bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl font-semibold transition ${loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           type="submit"
+          disabled={loading}
         >
-          Send
+          {loading ? "Sending..." : "Send"}
         </button>
       </form>
     </div>

@@ -74,11 +74,18 @@ This application is a full-stack AI-powered chat platform featuring user authent
 
 ## Setup Instructions
 
+1. **Clone this Repository**:
+
+    ```bash
+    git clone https://github.com/hasanhabib16011998/Poridhi_Labs.git
+    cd Exam_2_Rate_Limiting
+    ```
 ### Backend
 
 1. **Install dependencies**:
     ```bash
-    npm install express cors body-parser jsonwebtoken dotenv @ai-sdk/google ai
+    cd backend
+    npm install
     ```
 
 2. **Create `.env` file** with your Google Gemini API key:
@@ -86,50 +93,27 @@ This application is a full-stack AI-powered chat platform featuring user authent
     GOOGLE_GENERATIVE_AI_API_KEY=your-google-api-key
     ```
 
-3. **Set `type: "module"` in `package.json`** (for ESM support):
-    ```json
-    {
-      "type": "module"
-    }
-    ```
+3. **Export API Key**:
+   ```bash
+   export GOOGLE_GENERATIVE_AI_API_KEY="your-google-api-key"
+   ```
 
 4. **Run the backend**:
     ```bash
-    node server.js
+    npm start
     ```
 
 ### Frontend
 
 1. **Install dependencies**:
     ```bash
+    cd frontend
     npm install
-    npm install react-markdown axios
-    npm install -D tailwindcss @tailwindcss/typography
-    npx tailwindcss init
     ```
 
-2. **Configure Tailwind** in `tailwind.config.js`:
-    ```javascript
-    export default {
-      content: [
-        "./index.html",
-        "./src/**/*.{js,ts,jsx,tsx}",
-      ],
-      theme: { extend: {} },
-      plugins: [require('@tailwindcss/typography')],
-    }
-    ```
-
-3. **Ensure Tailwind CSS imports** in your CSS:
-    ```css
-    @tailwind base;
-    @tailwind components;
-    @tailwind utilities;
-    ```
-
-4. **Run the frontend**:
+2. **Run the frontend**:
     ```bash
-    npm run dev
+    npm start
     ```
 
 ---

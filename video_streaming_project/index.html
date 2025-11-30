@@ -3,13 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Streaming</title>
+    <title>Video Streaming (DASH)</title>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
 </head>
 <body>
-    <h1>Video Streaming Example</h1>
-    <video controls width="600">
-        <source src="http://localhost:3000/video" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+    <h1>Video Streaming Example (DASH)</h1>
+    <video id="videoPlayer" controls width="600"></video>
+
+    <script>
+        const url = "http://localhost:3000/video.mpd"; // The URL of your MPD file
+        const videoElement = document.querySelector("#videoPlayer");
+        
+        // 3. Check if the browser can play DASH and initialize the player
+        if (dashjs.supportsMediaSource()) {
+            const player = dashjs.MediaPlayer().create();
+            player.initialize(videoElement, url, true); // (video element, MPD URL, autoPlay)
+        } else {
+            console.error("Browser does not support MediaSource Extensions, required for DASH.");
+        }
+    </script>
 </body>
 </html>

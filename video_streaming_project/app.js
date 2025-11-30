@@ -18,7 +18,7 @@ app.get('/video/:segment', (req,res) => {
     console.log('Called segment')
     const segment = req.params.segment;
     const filepath = path.join(__dirname, 'video', segment);
-    res.sendFile(filepath)
+    res.sendFile(filepath) 
 })
 
 
